@@ -1,0 +1,8 @@
+mongodb Start : brew services start mongodb-community@5.0
+mongodb  Stop : brew services stop mongodb-community@5.0
+
+mail server : python -m smtpd -n -c DebuggingServer localhost:1025
+
+pipenv shell
+
+export ENV_FILE_LOCATION=./.env
