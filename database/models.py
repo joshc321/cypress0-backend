@@ -16,7 +16,7 @@ class Customer(db.Document):
     system = db.StringField(max_length=1023)
     notes = db.StringField(max_length=1023)
     serviceRecords = db.ListField(db.ReferenceField('ServiceRecord'), reverse_delete_rule=db.PULL)
-    email = db.EmailField()
+    email = db.StringField()
     added_by = db.ReferenceField('User')
     date_created = db.DateTimeField(default=datetime.datetime.utcnow)
 
@@ -41,13 +41,15 @@ class User(db.Document):
 
 class ServiceRecord(db.Document):
     date = db.DateTimeField(required=False)
-    address = db.StringField(required=True, max_length=120)
-    city = db.StringField(required=True, max_length=50)
-    state = db.StringField(required=True, max_length=50)
+    address = db.StringField(required=False, max_length=120)
+    city = db.StringField(required=False, max_length=50)
+    state = db.StringField(required=False, max_length=50)
     zip = db.StringField(max_length=20)
-    service = db.StringField(required=True, max_length=1023)
+    service = db.StringField(required=False, max_length=1023)
     notes = db.StringField(max_length=1023)
     bill = db.StringField(max_length=20)
+    price = db.StringField(max_length=20)
     customer = db.ReferenceField('Customer', required=True)
     added_by = db.ReferenceField('User')
+    date = db.DateTimeField(default=datetime.datetime.utcnow)
     date_created = db.DateTimeField(default=datetime.datetime.utcnow)

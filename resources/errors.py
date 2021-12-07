@@ -102,5 +102,13 @@ errors = {
       "UserNotFoundError":{
           "message": "User not found",
           "status": 400
-      }
+      },
+      "ExpiredSignatureError":{
+          "message": "Expired Token",
+          "status": 403
+      },
+      "InvalidTokenError":{
+          "message": "Invalid Token",
+          "status": 403
+      },
 }

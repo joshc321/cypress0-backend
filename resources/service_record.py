@@ -4,13 +4,15 @@ from flask import Response, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_jwt_extended.exceptions import NoAuthorizationError
 from database.models import ServiceRecord, User, Customer
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 from mongoengine.errors import FieldDoesNotExist, NotUniqueError, DoesNotExist, ValidationError, InvalidQueryError
 from resources.errors import SchemaValidationError, InternalServerError, ServiceDoesNotExistError, ServiceAlreadyExistsError, BadTokenError
+import json
+import datetime
 
 class ServicesApi(Resource):
     
-    #@jwt_required()
+    @jwt_required()
     def get(self):
         service_records = ServiceRecord.objects().to_json()
         return Response(service_records, mimetype="application/json", status=200)
@@ -25,6 +27,12 @@ class ServiceApi(Resource):
             body = request.get_json()
             user = User.objects.get(id=user_id)
             customer = Customer.objects.get(id=id)
+            #date = datetime.datetime.fromtimestamp(body['date'] / 1000.0)
+            if 'date' in body:
+                print('body date', body['date'])
+                date = datetime.datetime.strptime(body['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+                print("Posted date", date)
+                body['date'] = date
             service = ServiceRecord(**body, customer=customer ,added_by=user)
             service.save()
             customer.update(push__serviceRecords=service)
@@ -70,9 +78,12 @@ class ServiceApi(Resource):
     
     @jwt_required()
     def get(self, id):  #id -- service id
+        parser = reqparse.RequestParser()
+        parser.add_argument('id', action='append')
+        parsed = parser.parse_args()
         try:
-            service = ServiceRecord.objects.get(id=id).to_json()
-            return Response(service, mimetype="application/json", status=200)
+            services = ServiceRecord.objects(id__in=parsed['id']).to_json()
+            return Response(services, mimetype="application/json", status=200)
         except (DoesNotExist, ValidationError):
             raise ServiceDoesNotExistError
         except Exception as e:

@@ -7,6 +7,7 @@ from flask_restful import Api
 from resources.errors import errors
 from flask_mail import Mail
 
+
 app = Flask(__name__)
 app.config.from_envvar('ENV_FILE_LOCATION')
 #app.config['PROPAGATE_EXCEPTIONS'] = True
@@ -17,7 +18,6 @@ from resources.routes import initialize_routes
 
 api = Api(app, errors=errors)
 jwt = JWTManager(app)
-
 
 initialize_db(app)
 initialize_routes(api)

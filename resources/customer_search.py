@@ -10,7 +10,7 @@ from bson.json_util import dumps
 
 class SearchApi(Resource):  #previously MoviesApi
     
-    #@jwt_required()
+    @jwt_required()
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('q', type=str, required=True)
