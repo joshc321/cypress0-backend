@@ -19,6 +19,21 @@ class Customer(db.Document):
     email = db.StringField()
     added_by = db.ReferenceField('User')
     date_created = db.DateTimeField(default=datetime.datetime.utcnow)
+    meta = {'indexes': [
+        {'fields': [
+            '$first', '$last', '$phone', '$address', 
+            '$city', '$state', '$zip', '$system', '$notes',
+            '$email',
+        ],
+         'default_language': 'english',
+         'weights': {
+             'first': 1, 'last': 1, 'phone': 1, 
+             'address': 1, 'city': 1, 'state': 1,
+             'zip': 1, 'system': 1, 'notes': 1,
+             'email': 1
+         }
+        }
+    ]}
 
 
 class User(db.Document):

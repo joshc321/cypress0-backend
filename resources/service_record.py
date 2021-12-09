@@ -33,6 +33,13 @@ class ServiceApi(Resource):
                 date = datetime.datetime.strptime(body['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
                 print("Posted date", date)
                 body['date'] = date
+
+            if body['address'].strip() == '':
+                body['address'] = customer.address
+                body['city'] = customer.city
+                body['state'] = customer.state
+                body['zip'] = customer.zip
+
             service = ServiceRecord(**body, customer=customer ,added_by=user)
             service.save()
             customer.update(push__serviceRecords=service)
@@ -82,7 +89,7 @@ class ServiceApi(Resource):
         parser.add_argument('id', action='append')
         parsed = parser.parse_args()
         try:
-            services = ServiceRecord.objects(id__in=parsed['id']).to_json()
+            services = ServiceRecord.objects(id__in=parsed['id']).order_by('-date').to_json()
             return Response(services, mimetype="application/json", status=200)
         except (DoesNotExist, ValidationError):
             raise ServiceDoesNotExistError

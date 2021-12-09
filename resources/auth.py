@@ -1,5 +1,6 @@
 #~/cypress/beta1/backend/resources/auth.py
 
+import json
 from flask import Response, request
 from flask_jwt_extended import create_access_token, jwt_required
 from database.models import User
@@ -8,9 +9,8 @@ import datetime
 from mongoengine.errors import FieldDoesNotExist, NotUniqueError, DoesNotExist
 from resources.errors import SchemaValidationError, EmailAlreadyExistsError, UnauthorizedError, InternalServerError
 
-
 class NewUserApi(Resource):  #previously SignupApi
-    @jwt_required
+    @jwt_required()
     def post(self):
         try:
             body = request.get_json()
@@ -44,3 +44,8 @@ class LoginApi(Resource):
         except Exception as e:
             raise InternalServerError
         
+class Authorized(Resource):
+    @jwt_required()
+    def get(self):
+        result = json.dumps({'status': 'authorized'})
+        return Response(result, mimetype="application/json", status=200)

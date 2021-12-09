@@ -53,3 +53,14 @@ class UserApi(Resource): #previously MovieApi
         except Exception:
             raise InternalServerError
 
+class ProtectedApi(Resource):
+    @jwt_required()
+    def get(self):
+        try:
+            id = get_jwt_identity()
+            user = User.objects.get(id=id).to_json()
+            return Response(user, mimetype="application/json", status=200)
+        except DoesNotExist:
+            raise UserNotFoundError
+        except Exception:
+            raise InternalServerError

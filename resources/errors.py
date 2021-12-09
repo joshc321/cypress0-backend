@@ -68,7 +68,7 @@ errors = {
          "status": 400
      },
      "EmailAlreadyExistsError": {
-         "message": "User with given email address already exists",
+         "message": "Email address already exists",
          "status": 400
      },
      "UnauthorizedError": {
@@ -111,4 +111,8 @@ errors = {
           "message": "Invalid Token",
           "status": 403
       },
+      "DecodeError":{
+          "message": "No auth",
+          "status": 403
+      }
 }

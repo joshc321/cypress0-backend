@@ -58,8 +58,8 @@ class ResetPassword(Resource):
             user.hash_password()
             user.save()
 
-            return send_email('[Movie-bag] Password reset successful',
-                              sender='support@movie-bag.com',
+            return send_email('[CYpress] Password reset successful',
+                              sender='support@cypress-beta1.com',
                               recipients=[user.email],
                               text_body='Password reset was successful',
                               html_body='<p>Password reset was successful</p>')

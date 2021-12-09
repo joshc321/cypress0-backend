@@ -17,12 +17,13 @@ class SearchApi(Resource):  #previously MoviesApi
         parsed = parser.parse_args()
 
         pipeline = [
-                { "$match": { "$text" : { "$search" : parsed['q'], "$diacriticSensitive": "true"} }},
+                { "$match": { "$text" : { "$search" : parsed['q']} }},
                 { "$sort": { "score": { "$meta": "textScore" } } }
             ]
 
         #customers = Customer.objects(address__icontains=parsed['q']).to_json()
         customers = Customer.objects().aggregate(pipeline)
         cust = dumps(list(customers))
+        #search2 = Customer.objects.search_text(parsed['q']).order_by('$text_score')
         # $text : { $search: <your string> } 
         return Response(cust, mimetype="application/json", status=200)
